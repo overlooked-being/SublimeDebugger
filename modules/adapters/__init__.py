@@ -22,3 +22,4 @@ from .mock import Mock
 from .sublime_adapter import Sublime
 
 from .emulicious_debugger import EmuliciousDebugger
+from .unity import Unity
