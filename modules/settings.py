@@ -110,6 +110,12 @@ class Settings:
 		description='Sets a specific path for node if not set adapters that require node to run will use whatever is in your path',
 	)
 
+	mono = Setting['str|None'](
+		key='mono',
+		default=None,
+		description='Sets a specific path for mono if not set adapters that require mono to run will use whatever is in your path',
+	)
+
 	integrated_output_panels = Setting['dict[str, dict[str, str]]'](
 		key='integrated_output_panels',
 		default={},

@@ -28,6 +28,21 @@ async def get_and_warn_require_node(adapter_type: str|list[str], log: dap.Consol
 
 	return node_path
 
+def get_mono_path(adapter_type: str|list[str]) -> str:
+	return Settings.mono or shutil.which('mono') or 'mono'
+
+async def get_and_warn_require_mono(adapter_type: str|list[str], log: dap.Console):
+	mono_path = get_mono_path(adapter_type)
+
+	try:
+		version = (await dap.Process.check_output([mono_path, '--version=number'])).strip().decode('utf-8')
+		log('transport', f'-- mono: version={version}')
+
+	except Exception as e:
+		log.error(f'This adapter requires Mono. It looks like you may not have node installed or it is not on your path: {e}. \nhttps://www.mono-project.com/')
+
+	return mono_path
+
 def get_open_port() -> int:
 	with socket.socket() as sock:
 		sock.bind(('localhost', 0))

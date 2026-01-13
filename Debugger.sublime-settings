@@ -69,4 +69,7 @@
 	// Sets a specific path for dlv if not set go will use whatever is in your path
 	"go_dlv": null,
 
+	// Sets a specific path for mono if not set adapters that require mono to run will use whatever is in your path
+	"mono": null
+
 }

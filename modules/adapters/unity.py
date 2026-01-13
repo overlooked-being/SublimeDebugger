@@ -10,30 +10,15 @@ from .. import core
 from . import util
 from .util import request
 
-class UnityInstaller(util.vscode.AdapterInstaller):
-	type = 'unity'
-
-	async def install(self, version: str|None, log: core.Logger):
-		pass
-
-	async def post_install(self, version: str|None, log: core.Logger):
-		pass
-
-	async def installable_versions(self, log: core.Logger):
-		return ['1.0.0']
-
-	def installed_version(self):
-		return '1.0.0'
-
-
-class Unity(dap.AdapterConfiguration):
+class Unity(dap.Adapter):
 	type = ['unity']
 	docs = 'https://github.com/muhammadsammy/free-vscode-csharp/blob/master/debugger.md'
 
-	installer = UnityInstaller()
+	installer = util.GitInstaller(type='unity', repo='overlooked-being/unity-dap')
 
 	async def start(self, log: core.Logger, configuration: dap.ConfigurationExpanded):
-		install_path = self.installer.install_path()
+		mono = await util.get_and_warn_require_mono(self.type, console)
+
 		unity_editor_log_paths = {
 			'linux': '~/.config/unity3d/Editor.log',
 			'osx' : '~/Library/Logs/Unity/Editor.log',
@@ -62,6 +47,29 @@ class Unity(dap.AdapterConfiguration):
 			configuration['address'] = '127.0.0.1'
 			configuration['port'] = port
 
-		command = ['mono', '/home/bea/Code/unity-dap/bin/Release/unity-debug-adapter.exe']
-
+		install_path = self.installer.install_path()
+		command = [mono, f'{install_path}/Release/unity-debug-adapter.exe']
 		return dap.StdioTransport(command, stderr=log.error)
+
+	@property
+	def configuration_snippets(self) -> list[dict[str, Any]]:
+		return [
+			{
+				'label': 'Unity: Attach to Unity Editor',
+				'body': {
+					'name': 'Unity: Attach to Unity Editor',
+					'type': 'unity',
+					'request': 'launch'
+				},
+			},
+			{
+				'label': 'Unity: Attach to Unity Player',
+				'body': {
+					'name': 'Unity: Attach to Unity Player',
+					'type': 'unity',
+					'request': 'launch',
+					'address': '127.0.0.1',
+					'port': 0
+				},
+			},
+		]
