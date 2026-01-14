@@ -10,11 +10,18 @@ from .. import core
 from . import util
 from .util import request
 
+def is_valid_asset(asset: str):
+	return asset.endswith('.zip') or asset.endswith('.tar.gz')
+
 class Unity(dap.Adapter):
 	type = ['unity']
-	docs = 'https://github.com/muhammadsammy/free-vscode-csharp/blob/master/debugger.md'
+	docs = 'https://github.com/overlooked-being/unity-dap/blob/master/README.md'
 
-	installer = util.GitInstaller(type='unity', repo='overlooked-being/unity-dap')
+	installer = util.GitInstaller(
+		type='unity',
+		repo='overlooked-being/unity-dap',
+		is_valid_asset=is_valid_asset
+	)
 
 	async def start(self, log: core.Logger, configuration: dap.ConfigurationExpanded):
 		mono = await util.get_and_warn_require_mono(self.type, console)
