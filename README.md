@@ -48,6 +48,9 @@ This project comes with some pre-configured debuggers (They can be installed usi
 ##### Emulicious Debugger
 - See https://github.com/Calindro/emulicious-debugger
 
+#### Unity
+- See https://github.com/overlooked-being/unity-dap
+
 ## Setup
 - Open the debug panel
   - from the command palette `Debugger: Open`
